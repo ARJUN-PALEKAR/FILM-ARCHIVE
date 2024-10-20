@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film Archive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>FILM ARCHIVE</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://arjun-palekar.github.io/portfolio/">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="home-section">
+            <div class="welcome-text">
+                <h2>Welcome to Film Archive!</h2>
+                <p>Your one-stop destination to find and explore movies.</p>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Enter movie name">
+                <button id="searchBtn">Search</button>
+            </div>
+        </section>
+
+        <section id="api">
+            <h2>The movie you searched</h2>
+            <div id="results"></div>
+        </section>
+
+        <section id="recommended">
+            <h2>Recommended Movies</h2>
+            <div id="recommendation-container" class="movies-container"></div>
+        </section>
+    </main>
+
+    
+    <div id="trailer-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-trailer" class="close">&times;</span>
+            <div id="trailer-modal-content"></div>
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
