@@ -25,7 +25,7 @@ getRecommendedMovies();
 
 function searchMovies(query) {
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
-    
+
     fetch(url)
         .then(response => response.json())
         .then(data => displayMovies(data.results, resultsContainer))
@@ -35,7 +35,7 @@ function searchMovies(query) {
 }
 
 function displayMovies(movies, container) {
-    container.innerHTML = ''; 
+    container.innerHTML = '';
 
     if (movies.length === 0) {
         container.innerHTML = '<p>No movies found. Try another search.</p>';
@@ -48,8 +48,8 @@ function displayMovies(movies, container) {
 
         const posterPath = movie.poster_path 
             ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
-            : 'placeholder.jpg'; 
-        
+            : 'placeholder.jpg';
+
         movieElement.innerHTML = `
             <img src="${posterPath}" alt="${movie.title} poster" class="movie-poster" data-movie-id="${movie.id}">
             <h3>${movie.title}</h3>
@@ -58,8 +58,10 @@ function displayMovies(movies, container) {
 
         container.appendChild(movieElement);
 
+        
         movieElement.querySelector('.movie-poster').addEventListener('click', () => {
             fetchTrailer(movie.id);
+            fetchMovieDetails(movie.id);  
         });
     });
 }
@@ -95,12 +97,52 @@ function playTrailer(trailerKey) {
     trailerModal.style.display = 'block';
 }
 
+function fetchMovieDetails(movieId) {
+    const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&append_to_response=videos,external_ids`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayMovieDetails(data);
+        })
+        .catch(error => {
+            console.error('Error fetching movie details:', error);
+        });
+}
+
+function displayMovieDetails(movie) {
+    const overview = document.createElement('p');
+    overview.id = 'movie-overview';
+    overview.textContent = `Overview: ${movie.overview || 'No overview available.'}`;
+    
+    const rating = document.createElement('p');
+    rating.id = 'rating';
+    rating.textContent = `IMDb Rating: ${movie.vote_average || 'N/A'}`;
+    
+    const platforms = document.createElement('div');
+    platforms.id = 'available-on';
+    platforms.innerHTML = `
+        Available on: 
+        <a href="https://www.imdb.com/title/${movie.external_ids.imdb_id}" target="_blank">IMDb</a>
+        ${movie.homepage ? ` | <a href="${movie.homepage}" target="_blank">Official Site</a>` : ''}
+    `;
+    
+    const detailsContainer = document.createElement('div');
+    detailsContainer.classList.add('movie-details');
+    detailsContainer.appendChild(overview);
+    detailsContainer.appendChild(rating);
+    detailsContainer.appendChild(platforms);
+    
+    trailerModalContent.appendChild(detailsContainer);
+}
+
+
 function getRecommendedMovies() {
     const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=1`;
 
     fetch(url)
         .then(response => response.json())
-        .then(data => displayMovies(data.results, recommendationContainer))
+        .then(data => displayMovies(data.results, recommendationContainer))  
         .catch(error => {
             console.error('Error fetching recommended movies:', error);
         });
